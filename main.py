@@ -53,17 +53,17 @@ def main():
 
     b.find_element_by_css_selector('#btnlogin').click()
 
+    # HKBEA would prompt you to change your password, let's ignore it if needed
     try:
-        # Change password next time
         b.find_element_by_css_selector(
             'body > div.wrapper > form > table > tbody > tr:nth-child(3) > td > table > tbody > tr > td:nth-child(2) > a').click()  # forced click continue
         b.find_element_by_css_selector(
             'body > div.wrapper > form > table > tbody > tr:nth-child(5) > td > table > tbody > tr > td > a:nth-child(3)').click()  # cancel change password
         b.find_element_by_css_selector('#act_next').click()  # enable otp later
-        pass
     except:
         pass
 
+    print('You can now use the browser. Ctrl + C to exit.')
     while True:
         sleep(1000)
 
