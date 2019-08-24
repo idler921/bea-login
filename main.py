@@ -3,6 +3,8 @@ from subprocess import check_output
 from selenium import webdriver
 from time import sleep
 from os import environ
+import requests
+import hashlib
 
 
 def get_digit_map(browser):
@@ -24,16 +26,18 @@ def get_digit_map(browser):
     for i in range(int(len(tmp) / 2)):
         sha256_map[tmp[i * 2]] = tmp[i * 2 + 1].split('.')[0]
 
-    cookies_arg = '; '.join(
-        map(lambda c: f"{c['name']}={c['value']}", browser.get_cookies()))
+    #cookies_arg = '; '.join(map(lambda c: f"{c['name']}={c['value']}", browser.get_cookies()))
+    s = requests.Session()
+    for cookie in browser.get_cookies():
+        s.cookies.set(cookie['name'], cookie['value'])
 
     digit_map = {}
     for i in range(10):
-        path = browser.find_element_by_css_selector(
-            f'.key{i}').get_attribute('style').split('"')[1]
-        sha256 = check_output(
-            f'curl -s \'https://mobile.hkbea-cyberbanking.com{path}\' -H \'Cookie: {cookies_arg}\' --compressed | sha256sum | awk \'{{print $1}}\'', shell=True).decode().strip()
-        print(i, path, sha256, sha256_map[sha256])
+        path = browser.find_element_by_css_selector(f'.key{i}').get_attribute('style').split('"')[1]
+        path2 = f"https://mobile.hkbea-cyberbanking.com{path}"
+        r = s.get(path2)
+        sha256 = hashlib.sha256(r.content).hexdigest()
+        print(i, path2, sha256, sha256_map[sha256])
         digit_map[sha256_map[sha256]] = str(i)
     print(digit_map)
     return digit_map
