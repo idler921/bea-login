@@ -12,8 +12,8 @@ https://github.com/Saren-Arterius/dad-bea/blob/master/main.py
 
 #from subprocess import check_output
 from selenium import webdriver
-#from time import sleep
-#from os import environ
+from time import sleep
+from os import environ
 import requests
 import hashlib
 import base64
@@ -39,7 +39,6 @@ def get_digit_map_2019(browser):
     for i in range(int(len(tmp) / 2)):
         sha256_map[tmp[i * 2]] = tmp[i * 2 + 1].split('.')[0]
 
-    #cookies_arg = '; '.join(map(lambda c: f"{c['name']}={c['value']}", browser.get_cookies()))
     s = requests.Session()
     for cookie in browser.get_cookies():
         s.cookies.set(cookie['name'], cookie['value'])
@@ -47,14 +46,9 @@ def get_digit_map_2019(browser):
     digit_map = {}
     for i in range(10):
         path = browser.find_element_by_css_selector(f'.key{i}').get_attribute('style').split('"')[1]
-        #print(path)
         path2 = f"https://mobile.hkbea-cyberbanking.com{path}"
-        #print(path2)
         r = s.get(path2)
-        #sha256 = check_output(
-            #f'curl -s \'https://mobile.hkbea-cyberbanking.com{path}\' -H \'Cookie: {cookies_arg}\' --compressed | sha256sum | awk \'{{print $1}}\'', shell=True).decode().strip()
         sha256 = hashlib.sha256(r.content).hexdigest()
-        #print(i, path2, sha256, sha256_map[sha256])
         digit_map[sha256_map[sha256]] = str(i)
     print(digit_map)
     return digit_map
@@ -109,14 +103,8 @@ def main():
     else:
         b = webdriver.Chrome()
 
-
     b.implicitly_wait(5)
-
-
-    #b.get('https://mobile.hkbea-cyberbanking.com/servlet/FRLogon?Lang=Big5&isFromPB=N')
-    #b.get('https://mobile.hkbea-cyberbanking.com/servlet/FRLogon?isFromPB=N')
     b.get('https://www.hkbea-cyberbanking.com/ibk/auth/web/login?Lang=Eng&beacookieid=')
-
     b.find_element_by_css_selector('#AcctNo').send_keys(ac_no)
     b.find_element_by_css_selector('#actPwdLabel').click()
 
@@ -128,10 +116,8 @@ def main():
 
     for c in ac_pw:
         if c.isdigit():
-            #b.find_element_by_css_selector(f'.key{digit_map[c]}').click()
             b.find_element_by_xpath("//div[@key-value='" + str(digit_map[c]) + "']").click()
         else:
-            #b.find_element_by_css_selector(f'.key{c.upper()}').click()
             b.find_element_by_xpath("//img[@src='/web/resource/logon2/fullkeypad/" + c.upper() + ".png']").click()
 
     b.find_element_by_css_selector('#loginBtn').click()
