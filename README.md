@@ -1,10 +1,10 @@
-# dad-bea
+# bea-login
 Auto login The Bank of East Asia (HKBEA) Cyberbanking account.
 
 # Requirements
-- Linux / MacOS
+- Linux / MacOS / Windows
     - Chromium OR Chrome + chromedriver
-    - curl
+
 - Python 3.5+
     - selenium
 
