@@ -2,11 +2,14 @@
 """
 Created on Fri Aug 23 17:05:37 2019
 
-https://github.com/Saren-Arterius/dad-bea/blob/master/main.py
+Fork from: https://github.com/Saren-Arterius/dad-bea/blob/master/main.py
 
 @author: Saren Arterius
 
 @author: idler@gmail.com update for 2020 login
+
+!! This code won't work for BEA today. The legacy on-screen keyboard has disappeared.
+!! Thanks for the original Saren's works.
 
 """
 
@@ -138,4 +141,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    #main()
+    print("!! This code won't work for BEA today. The legacy on-screen keyboard has disappeared.")
+    print("!! Thanks for the original Saren's works.")
+
